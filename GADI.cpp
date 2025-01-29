@@ -1,43 +1,34 @@
-// Motor driver pin connections
-#define MOTOR1_IN1 6
-#define MOTOR1_IN2 7
-#define MOTOR2_IN1 8
-#define MOTOR2_IN2 9
-#define MOTOR3_IN1 10
-#define MOTOR3_IN2 11
-#define MOTOR4_IN1 12
-#define MOTOR4_IN2 13
+#include <Wire.h>  
+#include <Adafruit_MotorShield.h>  
 
-// Ultrasonic sensor pin connections
+// Create the motor shield object
+Adafruit_MotorShield AFMS = Adafruit_MotorShield();
+
+// Motors connected to shield
+Adafruit_DCMotor *motor1 = AFMS.getMotor(1);
+Adafruit_DCMotor *motor2 = AFMS.getMotor(2);
+Adafruit_DCMotor *motor3 = AFMS.getMotor(3);
+Adafruit_DCMotor *motor4 = AFMS.getMotor(4);
+
+// Ultrasonic sensor pins
 #define TRIG_PIN 4
 #define ECHO_PIN 5
 
-// Minimum distance to detect an obstacle (in cm)
-#define OBSTACLE_DISTANCE 20
-
-// Function prototypes
-void moveForward();
-void turnLeft();
-void turnRight();
-void stopMotors();
-long getDistance();
+#define OBSTACLE_DISTANCE 20  // Distance threshold (cm)
 
 void setup() {
-  // Motor pins as output
-  pinMode(MOTOR1_IN1, OUTPUT);
-  pinMode(MOTOR1_IN2, OUTPUT);
-  pinMode(MOTOR2_IN1, OUTPUT);
-  pinMode(MOTOR2_IN2, OUTPUT);
-  pinMode(MOTOR3_IN1, OUTPUT);
-  pinMode(MOTOR3_IN2, OUTPUT);
-  pinMode(MOTOR4_IN1, OUTPUT);
-  pinMode(MOTOR4_IN2, OUTPUT);
+  Serial.begin(9600);
+  AFMS.begin();  // Initialize motor shield
 
-  // Ultrasonic sensor pins
+  // Set motor speed (0-255)
+  motor1->setSpeed(200);
+  motor2->setSpeed(200);
+  motor3->setSpeed(200);
+  motor4->setSpeed(200);
+
+  // Ultrasonic sensor setup
   pinMode(TRIG_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
-
-  Serial.begin(9600);
 }
 
 void loop() {
@@ -48,62 +39,38 @@ void loop() {
   if (distance < OBSTACLE_DISTANCE) {
     stopMotors();
     delay(500);
-    turnRight();  // Change direction
-    delay(800);   // Adjust turning duration
+    turnRight();
+    delay(800);
   } else {
     moveForward();
   }
 }
 
-// Function to move all motors forward
+// Move Forward
 void moveForward() {
-  digitalWrite(MOTOR1_IN1, HIGH);
-  digitalWrite(MOTOR1_IN2, LOW);
-  digitalWrite(MOTOR2_IN1, HIGH);
-  digitalWrite(MOTOR2_IN2, LOW);
-  digitalWrite(MOTOR3_IN1, HIGH);
-  digitalWrite(MOTOR3_IN2, LOW);
-  digitalWrite(MOTOR4_IN1, HIGH);
-  digitalWrite(MOTOR4_IN2, LOW);
+  motor1->run(FORWARD);
+  motor2->run(FORWARD);
+  motor3->run(FORWARD);
+  motor4->run(FORWARD);
 }
 
-// Function to turn left
-void turnLeft() {
-  digitalWrite(MOTOR1_IN1, LOW);
-  digitalWrite(MOTOR1_IN2, HIGH);
-  digitalWrite(MOTOR2_IN1, HIGH);
-  digitalWrite(MOTOR2_IN2, LOW);
-  digitalWrite(MOTOR3_IN1, LOW);
-  digitalWrite(MOTOR3_IN2, HIGH);
-  digitalWrite(MOTOR4_IN1, HIGH);
-  digitalWrite(MOTOR4_IN2, LOW);
-}
-
-// Function to turn right
+// Turn Right
 void turnRight() {
-  digitalWrite(MOTOR1_IN1, HIGH);
-  digitalWrite(MOTOR1_IN2, LOW);
-  digitalWrite(MOTOR2_IN1, LOW);
-  digitalWrite(MOTOR2_IN2, HIGH);
-  digitalWrite(MOTOR3_IN1, HIGH);
-  digitalWrite(MOTOR3_IN2, LOW);
-  digitalWrite(MOTOR4_IN1, LOW);
-  digitalWrite(MOTOR4_IN2, HIGH);
+  motor1->run(FORWARD);
+  motor2->run(BACKWARD);
+  motor3->run(FORWARD);
+  motor4->run(BACKWARD);
 }
 
-// Function to stop all motors
+// Stop Motors
 void stopMotors() {
-  digitalWrite(MOTOR1_IN1, LOW);
-  digitalWrite(MOTOR1_IN2, LOW);
-  digitalWrite(MOTOR2_IN1, LOW);
-  digitalWrite(MOTOR2_IN2, LOW);
-  digitalWrite(MOTOR3_IN1, LOW);
-  digitalWrite(MOTOR3_IN2, LOW);
-  digitalWrite(MOTOR4_IN1, LOW);
-  digitalWrite(MOTOR4_IN2, LOW);
+  motor1->run(RELEASE);
+  motor2->run(RELEASE);
+  motor3->run(RELEASE);
+  motor4->run(RELEASE);
 }
 
-// Function to get the distance from the ultrasonic sensor
+// Get distance from Ultrasonic Sensor
 long getDistance() {
   digitalWrite(TRIG_PIN, LOW);
   delayMicroseconds(2);
