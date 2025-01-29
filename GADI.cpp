@@ -1,5 +1,6 @@
 #include <Wire.h>  
 #include <Adafruit_MotorShield.h>  
+#include <APMotor.h>
 
 // Create the motor shield object
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
