@@ -1,6 +1,6 @@
 # Arduino 4WD Obstacle-Avoiding Robot
 
-![Robot Image](path_to_your_image.jpg)
+![Robot Image](<!-- Uploading "IMG20250129093534.jpg"... -->)
 
 ## Table of Contents
 
