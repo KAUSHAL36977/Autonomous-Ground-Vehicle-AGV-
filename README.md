@@ -1,6 +1,7 @@
 # Arduino 4WD Obstacle-Avoiding Robot
 
-![Robot Image](![Image](https://github.com/user-attachments/assets/a0f22bd4-d38c-46cc-95f8-af1d513a7210))
+![Robot Image](![IMG20250129093534](https://github.com/user-attachments/assets/ba67b947-cfa9-4952-b717-61c1bd8e5aa9)
+)
 
 ## Table of Contents
 
